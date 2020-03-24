@@ -1,0 +1,4 @@
+#package provides prebuilt bniary
+koadic: arch-dependent-file-in-usr-share *
+koadic: arch-independent-package-contains-binary-or-object *
+windows-devel-file-in-package usr/share/koadic/data/bin/*

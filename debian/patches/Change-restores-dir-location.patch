@@ -1,0 +1,34 @@
+From: Sophie Brun <sophie@offensive-security.com>
+Date: Wed, 25 Mar 2020 14:30:52 +0100
+Subject: Change restores dir location
+
+Last-Update: 2020-03-25
+Name: change-restores-dir-location.patch
+Description: don't create the restores directory in /usr/share/koadic.
+Normal user can't do that.
+---
+ core/restoreclock.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/core/restoreclock.py b/core/restoreclock.py
+index 04b6ac6..1f0f46b 100644
+--- a/core/restoreclock.py
++++ b/core/restoreclock.py
+@@ -10,7 +10,7 @@ class RestoreClock(object):
+         self.check_alive_timer = None
+         self.restore_interval = 60 # seconds between each restore check
+         self.restore_time = time.time()+self.restore_interval
+-        self.restore_dir = "restores/"
++        self.restore_dir = os.path.expanduser("~/.local/koadic/restores/")
+         self.restore_fname = self.restore_dir+time.strftime("%Y%m%d-%H%M%S")+".json"
+         self.check_restores()
+         self.check()
+@@ -18,7 +18,7 @@ class RestoreClock(object):
+     def check_restores(self):
+         if not os.path.exists(self.restore_dir):
+             try:
+-                os.mkdir(self.restore_dir)
++                os.makedirs(self.restore_dir)
+             except OSError:
+                 self.shell.print_error("Could not create restore directory!")
+ 

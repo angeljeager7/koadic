@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE = 1
+
+
+%:
+	dh $@ --with python3
+
+override_dh_install:
+	# don't install extra README/LICENSE files
+	# don't install secretsdump.py file. It's a copy of the file
+	# provided by impacket
+	dh_install -XREADME -XReadme -XReadMe -XLICENSE -Xsecretsdump -Xgitignore
+	chmod 644 debian/koadic/usr/share/koadic/data/pabst.txt
+

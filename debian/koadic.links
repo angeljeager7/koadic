@@ -1,0 +1,4 @@
+# use the Kali package python3-impacket instead of keeping or duplicating
+# Python2 code included in upstream tarball or in gitsubmodule
+usr/lib/python3/dist-packages/impacket usr/share/koadic/data/impacket
+usr/share/doc/python3-impacket/examples/secretsdump.py usr/share/koadic/data/bin/secretsdump/secretsdump.py

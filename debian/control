@@ -1,0 +1,34 @@
+Source: koadic
+Section: misc
+Priority: optional
+Maintainer: Kali Developers <devel@kali.org>
+Uploaders: Sophie Brun <sophie@offensive-security.com>
+Build-Depends: debhelper-compat (= 12), dh-python, python3-all
+Standards-Version: 4.5.0
+Homepage: https://github.com/zerosum0x0/koadic
+Vcs-Browser: https://gitlab.com/kalilinux/packages/koadic
+Vcs-Git: https://gitlab.com/kalilinux/packages/koadic.git
+Testsuite: autopkgtest-pkg-python
+
+Package: koadic
+Architecture: all
+Depends: python3-crypto,
+         python3-impacket,
+         python3-pyasn1,
+         python3-pypykatz,
+         python3-rjsmin,
+         python3-tabulate,
+         ${misc:Depends},
+         ${python3:Depends}
+Description: Windows post-exploitation rootkit
+ This package contains Koadic, or COM Command & Control. It is a Windows
+ post-exploitation rootkit similar to other penetration testing tools such as
+ Meterpreter and Powershell Empire. The major difference is that Koadic does
+ most of its operations using Windows Script Host (a.k.a. JScript/VBScript),
+ with compatibility in the core to support a default installation of Windows
+ 2000 with no service packs (and potentially even versions of NT4) all the way
+ through Windows 10.
+ .
+ It is possible to serve payloads completely in memory from stage 0 to beyond,
+ as well as use cryptographically secure communications over SSL and TLS
+ (depending on what the victim OS has enabled).

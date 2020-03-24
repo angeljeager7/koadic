@@ -1,0 +1,5 @@
+version=4
+# no upstream release at the moment
+opts="filenamemangle=s%(?:.*?)?v?(\d[\d.]*)\.tar\.gz%koadic-$1.tar.gz%" \
+   https://github.com/zerosum0x0/koadic/tags \
+   (?:.*?/)?v?(\d[\d.]*)\.tar\.gz debian uupdate
