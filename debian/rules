@@ -12,4 +12,3 @@ override_dh_install:
 	# provided by impacket
 	dh_install -XREADME -XReadme -XReadMe -XLICENSE -Xsecretsdump -Xgitignore
 	chmod 644 debian/koadic/usr/share/koadic/data/pabst.txt
-
