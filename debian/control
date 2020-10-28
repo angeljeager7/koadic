@@ -12,8 +12,7 @@ Testsuite: autopkgtest-pkg-python
 
 Package: koadic
 Architecture: all
-Depends: python3-crypto,
-         python3-impacket,
+Depends: python3-impacket,
          python3-pyasn1,
          python3-pypykatz,
          python3-rjsmin,
