@@ -1,3 +1,18 @@
+koadic (0~git20200506-0kali1) kali-dev; urgency=medium
+
+  [ Kali Janitor ]
+  * Trim trailing whitespace.
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
+    Repository-Browse.
+
+  [ Sophie Brun ]
+  * Remove useless and obsolete dependency pycrypto
+  * Add missing Python version in script
+  * Add lintian-overrides about data
+  * New upstream version 0~git20200506
+
+ -- Sophie Brun <sophie@offensive-security.com>  Wed, 28 Oct 2020 11:29:07 +0100
+
 koadic (0~git20200303-0kali1) kali-dev; urgency=medium
 
   * Initial release
