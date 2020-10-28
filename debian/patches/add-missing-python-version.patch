@@ -1,0 +1,19 @@
+From: Sophie Brun <sophie@offensive-security.com>
+Date: Wed, 28 Oct 2020 10:53:54 +0100
+Subject: Add missing Python version in script
+
+Last-Update: 2020-10-28
+---
+ data/bin/mimishim/server.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/data/bin/mimishim/server.py b/data/bin/mimishim/server.py
+index e2bc821..410d1b6 100644
+--- a/data/bin/mimishim/server.py
++++ b/data/bin/mimishim/server.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ from http.server import BaseHTTPRequestHandler, HTTPServer
+ from emu.powerkatz32 import x32
