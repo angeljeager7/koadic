@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Kali Developers <devel@kali.org>
 Uploaders: Sophie Brun <sophie@offensive-security.com>
 Build-Depends: debhelper-compat (= 12), dh-python, python3-all
-Standards-Version: 4.5.0
+Standards-Version: 4.6.0
 Homepage: https://github.com/zerosum0x0/koadic
 Vcs-Browser: https://gitlab.com/kalilinux/packages/koadic
 Vcs-Git: https://gitlab.com/kalilinux/packages/koadic.git
