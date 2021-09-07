@@ -7,8 +7,8 @@ class ThunderstruckJob(core.job.Job):
     def create(self):
         if self.session_id == -1:
             response = urllib.request.urlopen(self.options.get("VIDEOURL")).read().decode()
-            ms = response.split('approxDurationMs\\":\\"')[1].split("\\")[0]
-            seconds = int(ms)//1000
+            ms = response.split('approxDurationMs')[1].split(',')[0]
+            seconds = int(''.join([s for s in ms if s.isdigit()]))//1000
             self.options.set("SECONDS", str(seconds+1))
 
     def done(self):
@@ -32,8 +32,8 @@ class ThunderstruckImplant(core.implant.Implant):
     def run(self):
         self.shell.print_status("Retrieving video length...")
         response = urllib.request.urlopen(self.options.get("VIDEOURL")).read().decode()
-        ms = response.split('approxDurationMs\\":\\"')[1].split("\\")[0]
-        seconds = int(ms)//1000
+        ms = response.split('approxDurationMs')[1].split(',')[0]
+        seconds = int(''.join([s for s in ms if s.isdigit()]))//1000
         self.shell.print_status(f"Video length: {seconds} seconds")
 
         self.options.set("SECONDS", str(seconds+1))

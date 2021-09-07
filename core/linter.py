@@ -175,8 +175,8 @@ class Linter(object):
         if "Koadic.file.readText" not in script and shellexecflag and filereadbinaryflag:
             stdlib = stdlib.split("//file.readText.start")[0] + stdlib.split("//file.readText.end")[1]
             filereadtextflag = True
-        if "Koadic.shell.run" not in script and filereadbinaryflag and filereadtextflag:
-            stdlib = stdlib.split("//shell.run.start")[0] + stdlib.split("//shell.run.end")[1]
+        # if "Koadic.shell.run" not in script and filereadbinaryflag and filereadtextflag:
+        #     stdlib = stdlib.split("//shell.run.start")[0] + stdlib.split("//shell.run.end")[1]
         if "Koadic.user.encoder" not in script and userinfoflag and httpuploadflag and httpaddheadersflag and shellexecflag and filereadbinaryflag:
             stdlib = stdlib.split("//user.encoder.start")[0] + stdlib.split("//user.encoder.end")[1]
         if "Koadic.uuid" not in script and userinfoflag and useriselevatedflag and useripaddrsflag and filereadbinaryflag:
