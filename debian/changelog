@@ -1,3 +1,10 @@
+koadic (0~git20210412-0kali1) kali-dev; urgency=medium
+
+  * New upstream version 0~git20210412
+  * Bump Standards-Version to 4.6.0
+
+ -- Sophie Brun <sophie@offensive-security.com>  Tue, 07 Sep 2021 11:17:03 +0200
+
 koadic (0~git20200506-0kali1) kali-dev; urgency=medium
 
   [ Kali Janitor ]
