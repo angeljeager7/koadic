@@ -1,4 +1,4 @@
-FROM    ubuntu:19.10
+FROM    ubuntu:20.04
 WORKDIR /opt/koadic
 RUN     apt-get update && apt-get install -y python3 python3-pip socat 
 COPY    . /opt/koadic

