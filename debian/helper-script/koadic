@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 set -e
 
-cd /usr/share/koadic
+cd /usr/share/koadic/
 exec ./koadic "$@"
